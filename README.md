@@ -6,3 +6,7 @@ Install:
 * copy hitron_snr to /etc/munin/plugins and make it executable
 * edit $host, $user and $pass
 * restart munin
+
+Example:
+
+![Munin Example](https://github.com/mreymann/hitron/blob/master/example.png)
