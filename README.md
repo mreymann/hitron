@@ -1,5 +1,5 @@
-# hitron
-Munin plugin that monitors SNR on Hitron CVE-30360 cable modems :bar_chart:
+# hitron_snr :bar_chart:
+Munin plugin that monitors SNR on Hitron CVE-30360 cable modems
 
 Install:
 
