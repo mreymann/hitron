@@ -48,7 +48,7 @@ if ( !empty( $argv[1] ) && $argv[1] == "config" ) {
 	for ( $i = 1; $i <= count( $dsstats ); $i++ ) {
 		echo "snr$i.label Port $i\n";
 	}
-	exit( 0 );
+	if ( !getenv( 'MUNIN_CAP_DIRTYCONFIG' ) ) exit( 0 );
 }
 
 for ( $i = 1; $i <= count( $dsstats ); $i++ ) {
