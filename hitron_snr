@@ -1,0 +1,80 @@
+#!/usr/bin/php
+<?php
+#
+# Munin plugin that monitors SNR on Hitron CVE-30360 cable modems
+# Only works if default password has been changed and nobody
+# is currently logged in!
+#
+# Tested with:
+# Hardware Version  1B
+# Firmware Version  4.2.9.10-IMS-KDG
+# Boot Version      PSPU-Boot 1.0.16.22-H2.9.0
+#
+
+$host = '192.168.100.1';
+$user = 'admin';
+$pass = 'mypass'; # 'password' won't work here!
+$cookie = tempnam( '/tmp', 'hitron_cookies_' );
+
+# Get login token
+$res = fetch( "http://$host/goform/login", "usernamehaha=$user&passwordhaha=$pass" );
+$str = file_get_contents( $cookie );
+preg_match_all( '|preSession\t(.*?)$|', $str, $matches );
+$token = $matches[1][0];
+if ( !$token ) {
+	if ( file_exists( $cookie ) ) unlink( $cookie );
+	fwrite( STDERR, "No token found!\n" );
+	exit( 1 );
+}
+
+# Log in
+$res = fetch( "http://$host/goform/login", "usernamehaha=$user&passwordhaha=$pass&preSession=$token" );
+
+# Get downstream status
+$json = fetch( "http://$host/data/dsinfo.asp" );
+
+# Log out
+$res = fetch( "http://$host/goform/logout", 'data=byebye' );
+
+# Remove cookie file
+if ( file_exists( $cookie ) ) unlink( $cookie );
+
+$dsstats = json_decode( $json, true );
+
+if ( !empty( $argv[1] ) && $argv[1] == "config" ) {
+	echo "graph_title Hitron CVE-30360 Signal to Noise Ratios (dB)\n";
+	echo "graph_vlabel dB (decibel)\n";
+	echo "graph_category hitron\n";
+	for ( $i = 1; $i <= count( $dsstats ); $i++ ) {
+		echo "snr$i.label Port $i\n";
+	}
+	exit( 0 );
+}
+
+for ( $i = 1; $i <= count( $dsstats ); $i++ ) {
+	echo "snr$i.value " . $dsstats[$i-1]["snr"] . "\n";
+}
+
+# Only functions past this point
+
+function fetch( $url, $data = '', $verbose = false ) {
+	global $cookie;
+	$ch = curl_init( $url );
+	curl_setopt( $ch, CURLOPT_HEADER, 0 );
+	if ( $data ) {
+		curl_setopt( $ch, CURLOPT_POST, 1 );
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data ); 
+	}
+	curl_setopt( $ch, CURLOPT_TIMEOUT, 10 );
+	curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
+	curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookie );
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+	if ( $verbose ) curl_setopt( $ch, CURLOPT_VERBOSE, true );
+	$res = curl_exec( $ch );
+	if ( $verbose ) {
+		$info = curl_getinfo( $ch );
+		echo "CURL_INFO: " . var_export( $info, true );
+	}
+	curl_close( $ch );
+	return $res;
+}
