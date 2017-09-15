@@ -3,7 +3,7 @@ Munin plugin that monitors SNR on Hitron CVE-30360 cable modems
 
 ## Install
 
-* copy hitron_snr to /etc/munin/plugins and make it executable
+* copy hitron_snr to /etc/munin/plugins
 * edit $host, $user and $pass
 * restart munin
 
