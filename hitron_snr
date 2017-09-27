@@ -2,8 +2,8 @@
 <?php
 #
 # Munin plugin that monitors SNR on Hitron CVE-30360 cable modems
-# Only works if default password has been changed and nobody
-# is currently logged in!
+# Only works if default password has been changed and nobody is
+# currently logged in!
 #
 # Tested with:
 # Hardware Version  1B
@@ -11,9 +11,9 @@
 # Boot Version      PSPU-Boot 1.0.16.22-H2.9.0
 #
 
-$host = '192.168.100.1';
-$user = 'admin';
-$pass = 'cgi2go'; # 'password' won't work here!
+$host = getenv( 'host' )? getenv( 'host' ) : '192.168.100.1';
+$user = getenv( 'user' )? getenv( 'user' ) : 'admin';
+$pass = getenv( 'pass' )? getenv( 'pass' ) : 'password'; # this default will NOT work!
 $cookie = tempnam( '/tmp', 'hitron_cookies_' );
 
 # Get login token
