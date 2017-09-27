@@ -14,7 +14,7 @@
 $host = getenv( 'host' )? getenv( 'host' ) : '192.168.100.1';
 $user = getenv( 'user' )? getenv( 'user' ) : 'admin';
 $pass = getenv( 'pass' )? getenv( 'pass' ) : 'password'; # this default will NOT work!
-$cookie = tempnam( '/tmp', 'hitron_cookies_' );
+$cookie = tempnam( sys_get_temp_dir(), 'hitron_cookies_' );
 
 # Get login token
 $res = fetch( "http://$host/goform/login", "usernamehaha=$user&passwordhaha=$pass" );
@@ -44,7 +44,7 @@ $dsstats = json_decode( $json, true );
 if ( !empty( $argv[1] ) ) {
 	switch ( $argv[1] ) {
 		case "autoconf":
-			echo "no\n";
+			echo "no (Plugin needs login information!)\n";
 			exit( 0 );
 			break;
 		case "config": 
