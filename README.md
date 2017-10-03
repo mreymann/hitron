@@ -18,3 +18,7 @@ env.pass yourpass
 ## Example
 
 ![Munin Example](https://github.com/mreymann/hitron/blob/master/example.png)
+
+## Troubleshooting
+
+Plugin only works if the default password has been changed and nobody is currently logged in!
