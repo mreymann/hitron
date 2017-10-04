@@ -48,6 +48,7 @@ if ( !empty( $argv[1] ) ) {
 			exit( 0 );
 			break;
 		case "config": 
+			echo "graph_info This graph shows SNRs on the Hitron CVE-30360\n";
 			echo "graph_title Hitron CVE-30360 Signal to Noise Ratios (dB)\n";
 			echo "graph_vlabel dB (decibel)\n";
 			echo "graph_category hitron\n";
