@@ -13,7 +13,7 @@ env.user admin
 env.pass yourpass
 ```
 * adjust env.host, env.user and env.pass
-* restart munin
+* restart munin-node
 
 ## Example
 
